@@ -1,0 +1,35 @@
+[
+	{
+		"type": "add",
+		"id": "2323alpaca",
+		"fields": {
+			"video": 2323,
+			"etiqueta": "alpaca",
+			"valor": 25,
+			"tiempos":
+			[
+				{ "minuto": 0, "segundo": 1 },
+				{ "minuto": 1, "segundo": 45 },
+				{ "minuto": 1, "segundo": 4 },
+				{ "minuto": 3, "segundo": 17 }
+			]
+		}
+	},
+	
+	{
+		"type": "add",
+		"id": "2323bicicleta",
+		"fields": {
+			"video": 2323,
+			"etiqueta": "bicicleta",
+			"valor": 13,
+			"tiempos":
+			[
+				{ "minuto": 0, "segundo": 12 },
+				{ "minuto": 2, "segundo": 3 },
+				{ "minuto": 3, "segundo": 36 },
+				{ "minuto": 4, "segundo": 12 }
+			]
+		}
+	}
+]

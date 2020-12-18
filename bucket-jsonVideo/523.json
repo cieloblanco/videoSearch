@@ -1,0 +1,11 @@
+{
+	"video": 523,
+	"tiempos":
+		[
+			{ "minuto": 0, "segundo": 12 },
+			{ "minuto": 0, "segundo": 50 },
+			{ "minuto": 1, "segundo": 11 },
+			{ "minuto": 1, "segundo": 23 },
+			{ "minuto": 2, "segundo": 43 }
+		]
+}
