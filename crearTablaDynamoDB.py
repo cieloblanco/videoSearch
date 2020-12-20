@@ -4,8 +4,14 @@ import boto3
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 
-if (dynamodb==None):
+dynamodb_client = boto3.client('dynamodb', region_name='us-east-1')
+
+try:
 	
+    response = dynamodb_client.describe_table(TableName='etiquetaVideo')
+    
+except dynamodb_client.exceptions.ResourceNotFoundException:
+
 	tabla = dynamodb.create_table(
 		TableName = 'etiquetaVideo',
 		KeySchema = [
@@ -14,7 +20,7 @@ if (dynamodb==None):
 				'KeyType': 'HASH'
 			},
 			{
-				'AttributeName': 'video',
+				'AttributeName': 'valorVideo',
 				'KeyType': 'RANGE'
 			}
 		],
@@ -24,8 +30,8 @@ if (dynamodb==None):
 				'AttributeType': 'S'
 			},
 			{
-				'AttributeName': 'video',
-				'AttributeType': 'N'
+				'AttributeName': 'valorVideo',
+				'AttributeType': 'S'
 			}
 		],
 		ProvisionedThroughput = {
@@ -35,8 +41,4 @@ if (dynamodb==None):
 	)
 
 	tabla.meta.client.get_waiter('table_exists').wait(TableName='etiquetaVideo')
-	
-else:
-	
-	tabla = dynamodb.Table('etiquetaVideo')
 

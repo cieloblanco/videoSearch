@@ -97,8 +97,8 @@ def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg, bucketIndex):
 		bloque = {}
 	
 		bloque["etiqueta"] = etiqueta
-		bloque["video"] = video		
-		bloque["valor"] = valor
+		#para ordenar por valor y luego por reciencia
+		bloque["valorVideo"] = str(valor).zfill(7) + "," + str(video).zfill(7)
 		
 		tiempos = []
 		for t in etiquetaTiempos[etiqueta]:

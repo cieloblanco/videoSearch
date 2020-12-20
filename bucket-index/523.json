@@ -1,8 +1,7 @@
 [
 	{		
 		"etiqueta": "alpaca",
-		"video": 523,		
-		"valor": 30,
+		"valorVideo": "0000030,0000523",
 		"tiempos":
 		[
 			{ "minuto": 0, "segundo": 11 },
@@ -14,8 +13,7 @@
 	
 	{
 		"etiqueta": "auto",
-		"video": 523,
-		"valor": 10,
+		"valorVideo": "0000010,0000523",
 		"tiempos":
 		[
 			{ "minuto": 0, "segundo": 12 },
