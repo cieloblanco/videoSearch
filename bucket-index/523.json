@@ -1,35 +1,27 @@
 [
-	{
-		"type": "add",
-		"id": "523alpaca",
-		"fields": {
-			"video": 523,
-			"etiqueta": "alpaca",
-			"valor": 30,
-			"tiempos":
-			[
-				{ "minuto": 0, "segundo": 11 },
-				{ "minuto": 1, "segundo": 45 },
-				{ "minuto": 2, "segundo": 46 },
-				{ "minuto": 3, "segundo": 7 }
-			]
-		}
+	{		
+		"etiqueta": "alpaca",
+		"video": 523,		
+		"valor": 30,
+		"tiempos":
+		[
+			{ "minuto": 0, "segundo": 11 },
+			{ "minuto": 1, "segundo": 45 },
+			{ "minuto": 2, "segundo": 46 },
+			{ "minuto": 3, "segundo": 7 }
+		]		
 	},
 	
 	{
-		"type": "add",
-		"id": "523auto",
-		"fields": {
-			"video": 523,
-			"etiqueta": "auto",
-			"valor": 10,
-			"tiempos":
-			[
-				{ "minuto": 0, "segundo": 12 },
-				{ "minuto": 2, "segundo": 43 },
-				{ "minuto": 3, "segundo": 6 },
-				{ "minuto": 4, "segundo": 7 }
-			]
-		}
+		"etiqueta": "auto",
+		"video": 523,
+		"valor": 10,
+		"tiempos":
+		[
+			{ "minuto": 0, "segundo": 12 },
+			{ "minuto": 2, "segundo": 43 },
+			{ "minuto": 3, "segundo": 6 },
+			{ "minuto": 4, "segundo": 7 }
+		]
 	}
 ]

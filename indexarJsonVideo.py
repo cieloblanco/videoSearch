@@ -1,12 +1,9 @@
-# aws cloudSearch ya debe estar corriendo, 
-# 	tomó los json indexadores de bucket-index
-
-# indexa el video en cloudSearch y 
-# 	guarda el json indexador en bucket-index
+# guarda el json indexador en bucket-index
 
 import json
 
 def etiquetarFrame(imagen):
+	
 	return ["alpaca","auto"]
 
 def etiquetaTiemposValor(etiquetaMinsSegs, instante):
@@ -41,7 +38,10 @@ def etiquetaTiemposValor(etiquetaMinsSegs, instante):
 		
 	return etiquetaTiempos, etiquetaValor
 
-def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg):
+def guardar_en_bucketIndex(bucketIndex, video, batch):
+	return 1
+
+def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg, bucketIndex):
 	
 	# json que contiene los frames del video (los min y seg
 	#  donde aparece)
@@ -73,8 +73,6 @@ def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg):
 				etiquetaMinsSegs[etiqueta] = []			
 			
 			etiquetaMinsSegs[etiqueta].append(minSeg)		
-				
-		print(etiquetaMinsSegs)
 	
 	# valoresEtiquetas:
 	#  valor de cada etiqueta, un mayor valor significa que en ese
@@ -92,34 +90,27 @@ def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg):
 	# para cada etiqueta generamos el bloque de indexbatchIndexVideo
 	#  que le corresponde
 	
-	batch_to_add = []
+	batch = []
 	
 	for etiqueta, valor in etiquetaValor.items():
 		
 		bloque = {}
-		bloque["type"] = "add"
-		bloque["id"] = str(video)+etiqueta
-		
-		fields = {}
-		fields["video"] = video
-		fields["etiqueta"] = etiqueta
-		fields["valor"] = valor
+	
+		bloque["etiqueta"] = etiqueta
+		bloque["video"] = video		
+		bloque["valor"] = valor
 		
 		tiempos = []
 		for t in etiquetaTiempos[etiqueta]:
 			m, s = divmod(t,100)
 			tiempos.append({"minuto": m, "segundo": s})
 					
-		fields["tiempos"] = tiempos
+		bloque["tiempos"] = tiempos
 		
-		bloque["fields"] = fields
-		
-		batch_to_add.append(bloque)
+		batch.append(bloque)
 	
-	# colocar json en cloudSearch
+	guardar_en_bucketIndex(bucketIndex, video, batch)
 	
-	# guardar archivo en bucket-index
-	
-	print(json.dumps(batch_to_add,indent=4))
+	print(json.dumps(batch,indent=4))
 
-indexar("bucket-jsonVideo", "523.json", 2, "bucket-img")
+indexar("bucket-jsonVideo", "523.json", 2, "bucket-img", "bucket-index")
