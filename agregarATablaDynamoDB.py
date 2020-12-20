@@ -4,7 +4,7 @@ import json
 import boto3
 from decimal import Decimal
 
-data_file =  open("bucket-index"+"/"+"2323.json")
+data_file =  open("bucket-index"+"/"+"523.json")
 
 data = json.load(data_file, parse_float=Decimal)
 
