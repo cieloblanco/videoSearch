@@ -1,51 +1,16 @@
 # guarda el json indexador en bucket-index
 
 import json
+import boto3
 
-def etiquetarFrame(imagen):
-	
-	return ["alpaca","auto"]
+def principal():
+	indexar("bucket-jsonVideo/523.json", 2)
 
-def etiquetaTiemposValor(etiquetaMinsSegs, instante):
-	
-	# etiquetaMinsSegs: {"alpaca":[3,23,45,123], "auto":[5] }
-	
-	# etiquetaTiempos: {"alpaca":[3,45], "auto":[5] }
-	
-	# etiquetaValor: {"alpaca": 13, "auto": 5 }
-	
-	etiquetaTiempos = {}
-	etiquetaValor = {}
-	
-	for etiqueta, minSeg in etiquetaMinsSegs.items():
-		
-		tiempoValor = []
-		count = 1
-		tiempo = 0
-		
-		for t in range(len(minSeg)):
-			if ( t+1<len(minSeg) and minSeg[t]+instante == minSeg[t+1]):
-				count+=1
-			else:
-				tiempoValor.append((minSeg[tiempo], count))				
-				tiempo = t+1
-				count = 1
-		               
-		tiempoValor = sorted(tiempoValor, key=lambda x:x[1], reverse=True)
-		
-		etiquetaTiempos[etiqueta] = [i[0] for i in tiempoValor]
-		etiquetaValor[etiqueta] = len(minSeg)
-		
-	return etiquetaTiempos, etiquetaValor
-
-def guardar_en_bucketIndex(bucketIndex, video, batch):
-	return 1
-
-def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg, bucketIndex):
+def indexar(jsonVideo, instante):
 	
 	# json que contiene los frames del video (los min y seg
 	#  donde aparece)
-	videoYframes = json.load(open(bucketJsonVideo+"/"+jsonVideo))
+	videoYframes = json.load(open(jsonVideo))
 	
 	cantFrames = 0 #5
 	
@@ -65,7 +30,7 @@ def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg, bucketIndex):
 		img = str(video)+"_"+str(minuto)+"_"+str(segundo)+".jpg"
 		
 		minSeg = minuto*100 + segundo
-		etiquetas = etiquetarFrame(bucketImg+"/"+img)		
+		etiquetas = etiquetarFrame("bucket-img"+"/"+img)		
 		
 		for etiqueta in etiquetas:
 			
@@ -109,8 +74,56 @@ def indexar(bucketJsonVideo, jsonVideo, instante, bucketImg, bucketIndex):
 		
 		batch.append(bloque)
 	
-	guardar_en_bucketIndex(bucketIndex, video, batch)
+	jsonBatch = guardar_en_bucketIndex(video, batch)
 	
-	print(json.dumps(batch,indent=4))
+	return jsonBatch
 
-indexar("bucket-jsonVideo", "523.json", 2, "bucket-img", "bucket-index")
+def etiquetarFrame(imagen):
+	
+	
+	
+	return ["alpaca","auto"]
+
+def etiquetaTiemposValor(etiquetaMinsSegs, instante):
+	
+	# etiquetaMinsSegs: {"alpaca":[3,23,45,123], "auto":[5] }
+	
+	# etiquetaTiempos: {"alpaca":[3,45], "auto":[5] }
+	
+	# etiquetaValor: {"alpaca": 13, "auto": 5 }
+	
+	etiquetaTiempos = {}
+	etiquetaValor = {}
+	
+	for etiqueta, minSeg in etiquetaMinsSegs.items():
+		
+		tiempoValor = []
+		count = 1
+		tiempo = 0
+		
+		for t in range(len(minSeg)):
+			if ( t+1<len(minSeg) and minSeg[t]+instante == minSeg[t+1]):
+				count+=1
+			else:
+				tiempoValor.append((minSeg[tiempo], count))				
+				tiempo = t+1
+				count = 1
+		               
+		tiempoValor = sorted(tiempoValor, key=lambda x:x[1], reverse=True)
+		
+		etiquetaTiempos[etiqueta] = [i[0] for i in tiempoValor]
+		etiquetaValor[etiqueta] = len(minSeg)
+		
+	return etiquetaTiempos, etiquetaValor
+
+def guardar_en_bucketIndex(video, batch):
+	
+	json_object = json.dumps(batch, indent = 4)
+	
+	videoBatch = open("bucket-index/"+str(video)+".json","w")
+	videoBatch.write(json_object)
+	videoBatch.close()
+	
+	return str(video)+".json"
+
+principal()

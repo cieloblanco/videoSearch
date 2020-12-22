@@ -1,25 +1,54 @@
 [
-	{		
-		"etiqueta": "alpaca",
-		"valorVideo": "0000030,0000523",
-		"tiempos":
-		[
-			{ "minuto": 0, "segundo": 11 },
-			{ "minuto": 1, "segundo": 45 },
-			{ "minuto": 2, "segundo": 46 },
-			{ "minuto": 3, "segundo": 7 }
-		]		
-	},
-	
-	{
-		"etiqueta": "auto",
-		"valorVideo": "0000010,0000523",
-		"tiempos":
-		[
-			{ "minuto": 0, "segundo": 12 },
-			{ "minuto": 2, "segundo": 43 },
-			{ "minuto": 3, "segundo": 6 },
-			{ "minuto": 4, "segundo": 7 }
-		]
-	}
+    {
+        "etiqueta": "alpaca",
+        "valorVideo": "0000005,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            },
+            {
+                "minuto": 1,
+                "segundo": 11
+            },
+            {
+                "minuto": 1,
+                "segundo": 23
+            },
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "auto",
+        "valorVideo": "0000005,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            },
+            {
+                "minuto": 1,
+                "segundo": 11
+            },
+            {
+                "minuto": 1,
+                "segundo": 23
+            },
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    }
 ]
