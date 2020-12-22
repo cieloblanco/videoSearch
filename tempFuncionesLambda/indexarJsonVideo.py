@@ -7,6 +7,7 @@ from urllib.parse import unquote_plus
 import json
 
 s3_client = boto3.client('s3')
+rekognition_client = boto3.client('rekognition')
 
 def lambda_handler(event, context):
     
@@ -40,6 +41,7 @@ def indexarJsonVideo(jsonVideo, instante):
     
     frames = videoYframes["frames"]
     video = videoYframes["video"]
+    
     for frame in frames:
         
         cantFrames += 1
@@ -49,7 +51,7 @@ def indexarJsonVideo(jsonVideo, instante):
         img = str(video)+"_"+str(minuto)+"_"+str(segundo)+".jpg"
         
         minSeg = minuto*100 + segundo
-        etiquetas = etiquetarFrame("bucket-img"+"/"+img)        
+        etiquetas = etiquetarFrame("bucket-img1", img)
         
         for etiqueta in etiquetas:
             
@@ -92,15 +94,24 @@ def indexarJsonVideo(jsonVideo, instante):
         bloque["tiempos"] = tiempos
         
         batch.append(bloque)
-    
+
     jsonBatch = guardar_en_bucketIndex(video, batch)
     
     return jsonBatch
 
 
-def etiquetarFrame(imagen):
+def etiquetarFrame(bucket, imagen):
+
+    response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':bucket,'Name':imagen}}, MaxLabels=10)
+
+    etiquetas = set()
+
+    for label in response['Labels']:
+        etiquetas.add(label['Name'])
+        for parent in label['Parents']:
+            etiquetas.add(parent['Name'])
     
-    return ["alpaca","auto"]
+    return list(etiquetas) #["alpaca","auto"]
 
 def etiquetaTiemposValor(etiquetaMinsSegs, instante):
     

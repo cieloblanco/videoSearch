@@ -10,17 +10,17 @@ tabla = dynamodb.Table('etiquetaVideo')
 #read
 '''
 try:
-	response = tabla.get_item(Key={'etiqueta': "alpaca", 'video': 523})
+    response = tabla.get_item(Key={'etiqueta': "alpaca", 'video': 523})
 except ClientError as e:
-	print(e.response['Error']['Message'])
+    print(e.response['Error']['Message'])
 else:
-	print(response['Item'])
+    print(response['Item'])
 '''
 
 #query
 response = tabla.query(
-	KeyConditionExpression = Key('etiqueta').eq("alpaca"),
-	ScanIndexForward=False
+    KeyConditionExpression = Key('etiqueta').eq("alpaca"),
+    ScanIndexForward=False
 )
 respuesta = response['Items']
 

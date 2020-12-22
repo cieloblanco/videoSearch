@@ -1,7 +1,7 @@
 [
     {
-        "etiqueta": "alpaca",
-        "valorVideo": "0000005,0000523",
+        "etiqueta": "Vehicle",
+        "valorVideo": "0000004,0000523",
         "tiempos": [
             {
                 "minuto": 0,
@@ -14,10 +14,6 @@
             {
                 "minuto": 1,
                 "segundo": 11
-            },
-            {
-                "minuto": 1,
-                "segundo": 23
             },
             {
                 "minuto": 2,
@@ -26,8 +22,22 @@
         ]
     },
     {
-        "etiqueta": "auto",
-        "valorVideo": "0000005,0000523",
+        "etiqueta": "Helmet",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            }
+        ]
+    },
+    {
+        "etiqueta": "Bicycle",
+        "valorVideo": "0000004,0000523",
         "tiempos": [
             {
                 "minuto": 0,
@@ -42,9 +52,307 @@
                 "segundo": 11
             },
             {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "Clothing",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            }
+        ]
+    },
+    {
+        "etiqueta": "Cyclist",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            }
+        ]
+    },
+    {
+        "etiqueta": "Transportation",
+        "valorVideo": "0000004,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            },
+            {
+                "minuto": 1,
+                "segundo": 11
+            },
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "Shorts",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            }
+        ]
+    },
+    {
+        "etiqueta": "Wheel",
+        "valorVideo": "0000004,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            },
+            {
+                "minuto": 1,
+                "segundo": 11
+            },
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "Person",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            }
+        ]
+    },
+    {
+        "etiqueta": "Sport",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 0,
+                "segundo": 12
+            },
+            {
+                "minuto": 0,
+                "segundo": 50
+            }
+        ]
+    },
+    {
+        "etiqueta": "Tree",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 11
+            }
+        ]
+    },
+    {
+        "etiqueta": "Mountain Bike",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 11
+            },
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "Plant",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 11
+            }
+        ]
+    },
+    {
+        "etiqueta": "Path",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 11
+            }
+        ]
+    },
+    {
+        "etiqueta": "Vegetation",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 11
+            }
+        ]
+    },
+    {
+        "etiqueta": "Machine",
+        "valorVideo": "0000002,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 11
+            },
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "City",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
                 "minuto": 1,
                 "segundo": 23
-            },
+            }
+        ]
+    },
+    {
+        "etiqueta": "Condo",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Metropolis",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Downtown",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Building",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Urban",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Road",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Street",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Architecture",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "High Rise",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 1,
+                "segundo": 23
+            }
+        ]
+    },
+    {
+        "etiqueta": "Bike",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
+            {
+                "minuto": 2,
+                "segundo": 43
+            }
+        ]
+    },
+    {
+        "etiqueta": "Bmx",
+        "valorVideo": "0000001,0000523",
+        "tiempos": [
             {
                 "minuto": 2,
                 "segundo": 43
