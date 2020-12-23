@@ -1,32 +1,12 @@
-import boto3
-import os
-import sys
-import uuid
-from urllib.parse import unquote_plus
+# guarda el json indexador en bucket-index
 
 import json
+import boto3
 
-s3_client = boto3.client('s3')
-rekognition_client = boto3.client('rekognition')
+def principal():
+    indexar("/home/kevin/Documentos/video search/fjk-bucket-jsonvideo/2323.json", 2)
 
-def lambda_handler(event, context):
-    
-    for record in event['Records']:
-        
-        bucket = record['s3']['bucket']['name']
-        
-        key = unquote_plus(record['s3']['object']['key'])
-        
-        download_path = '/tmp/{}{}'.format(uuid.uuid4(), key)
-        s3_client.download_file(bucket, key, download_path)
-        
-        videoBatch = indexarJsonVideo(download_path, 2)
-    
-        upload_path = '/tmp/out-{}'.format(videoBatch)
-        
-        s3_client.upload_file(upload_path, '{}'.format("bucket-index1"), videoBatch)
-
-def indexarJsonVideo(jsonVideo, instante):
+def indexar(jsonVideo, instante):
     
     # json que contiene los frames del video (los min y seg
     #  donde aparece)
@@ -41,7 +21,6 @@ def indexarJsonVideo(jsonVideo, instante):
     
     frames = videoYframes["frames"]
     video = videoYframes["video"]
-    
     for frame in frames:
         
         cantFrames += 1
@@ -51,8 +30,8 @@ def indexarJsonVideo(jsonVideo, instante):
         img = str(video)+"_"+str(minuto)+"_"+str(segundo)+".jpg"
         
         minSeg = minuto*100 + segundo
-        etiquetas = etiquetarFrame("bucket-img1", img)
-        
+        etiquetas = etiquetarFrame("fjk-bucket-img", img)        
+ 
         for etiqueta in etiquetas:
             
             if etiqueta not in etiquetaMinsSegs:
@@ -94,24 +73,25 @@ def indexarJsonVideo(jsonVideo, instante):
         bloque["tiempos"] = tiempos
         
         batch.append(bloque)
-
+    
     jsonBatch = guardar_en_bucketIndex(video, batch)
     
     return jsonBatch
 
-
 def etiquetarFrame(bucket, imagen):
 
-    response = rekognition_client.detect_labels(Image={'S3Object':{'Bucket':bucket,'Name':imagen}}, MaxLabels=10)
+    client = boto3.client('rekognition')
+
+    response = client.detect_labels(Image={'S3Object':{'Bucket':bucket,'Name':imagen}}, MaxLabels=10)
 
     etiquetas = set()
 
     for label in response['Labels']:
         etiquetas.add(label['Name'])
         for parent in label['Parents']:
-            etiquetas.add(parent['Name'])
-    
-    return list(etiquetas) #["alpaca","auto"]
+            etiquetas.add(parent['Name'])        
+
+    return etiquetas #["alpaca","auto"]
 
 def etiquetaTiemposValor(etiquetaMinsSegs, instante):
     
@@ -144,53 +124,15 @@ def etiquetaTiemposValor(etiquetaMinsSegs, instante):
         etiquetaValor[etiqueta] = len(minSeg)
         
     return etiquetaTiempos, etiquetaValor
-    
+
 def guardar_en_bucketIndex(video, batch):
-    
-    videoBatch = str(video)+".json"
     
     json_object = json.dumps(batch, indent = 4)
     
-    f = open('/tmp/out-{}'.format(videoBatch),"w")
-    f.write(json_object)
-    f.close()
+    videoBatch = open("/home/kevin/Documentos/video search/fjk-bucket-index/"+str(video)+".json","w")
+    videoBatch.write(json_object)
+    videoBatch.close()
     
-    return videoBatch
+    return str(video)+".json"
 
-'''
-import boto3
-import os
-import sys
-import uuid
-from urllib.parse import unquote_plus
-
-s3_client = boto3.client('s3')
-
-def indexarJsonVideo(inputFile):
-
-    videoBatch = "1.json"
-
-    f = open('/tmp/out-{}'.format(videoBatch), "w")
-    f.write("ok2")
-    f.close()
-    
-    return videoBatch
-    
-
-def lambda_handler(event, context):
-    
-    for record in event['Records']:
-        
-        bucket = record['s3']['bucket']['name']
-        
-        key = unquote_plus(record['s3']['object']['key'])
-        
-        download_path = '/tmp/{}{}'.format(uuid.uuid4(), key)
-        s3_client.download_file(bucket, key, download_path)
-        
-        videoBatch = indexarJsonVideo(download_path)
-    
-        upload_path = '/tmp/out-{}'.format(videoBatch)
-        
-        s3_client.upload_file(upload_path, '{}'.format("bucket-index1"), videoBatch)
-'''
+principal()

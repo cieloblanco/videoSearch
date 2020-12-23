@@ -29,4 +29,4 @@ print("tiempos para marcar en el video:\n", respuesta[0]["tiempos"])
 print("primer tiempo:\n", respuesta[0]["tiempos"][0]["minuto"], ":", respuesta[0]["tiempos"][0]["segundo"])
 print("\nsegundo resultado:\n", respuesta[0])
 
-tabla.delete()
+#tabla.delete()
