@@ -77,7 +77,7 @@ module.exports.handler = async (event, context) => {
             duracion: `${minutes}:${seconds}`
         };
 
-        var json = Buffer.from(JSON.stringify(information));
+        var json = Buffer.from(JSON.stringify(information, null, 4));
             
     } catch (error) {
         console.log(error);
