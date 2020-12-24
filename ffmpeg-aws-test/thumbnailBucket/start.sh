@@ -23,6 +23,4 @@ sleep 10s
 aws s3 ls s3://source18-thumbnail
 
 # donwload gif from bucket
-# aws s3 cp s3://source18-thumbnail/523.gif ./
-
-
+aws s3 cp s3://source18-thumbnail/1_0_28.jpg ./
