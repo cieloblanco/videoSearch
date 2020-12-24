@@ -4,10 +4,11 @@ const AWS = require('aws-sdk');
 const { spawnSync, exec } = require('child_process');
 const { readFileSync, writeFileSync, unlinkSync } = require('fs');
 
-const ffprobePath = '/opt/ffmpeg-static/ffprobe';
 const ffmpegPath = '/opt/ffmpeg-static/ffmpeg';
 
 const allowedTypes = ['mov', 'mpg', 'mpeg', 'mp4', 'wmv', 'avi', 'webm'];
+const width = 480
+const height = -1
 
 // get reference to S3 client
 const s3 = new AWS.S3();
@@ -41,9 +42,6 @@ exports.handler = async (event, context, callback) => {
             console.log("Files Deleted");
     });
 
-    //const scriptArgs = ['myScript.sh', 'arg1', 'arg2', 'youGetThePoint'];
-	//const child = spawn('sh', scriptArgs);
-
     // Download the video from the S3 source bucket. 
 
     try { 
@@ -58,12 +56,13 @@ exports.handler = async (event, context, callback) => {
     	// write the file to disk
     	writeFileSync(`/tmp/${srcKey}`, video.Body);
         
+        // get gif from video
         const ffmpegArgs = [
         '-ss', '61.0',
-        '-t', '2.5',
+        '-t', '5',
 		'-i', `/tmp/${srcKey}`,
 		'-f', 'gif',
-	    '-filter_complex', "[0:v] fps=12,scale=w=480:h=-1,split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1",
+	    '-filter_complex', `[0:v] fps=12,scale=w=${width}:h=${height},split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1`,
 	    `/tmp/${dstKey}`
 	  	];
 
@@ -79,11 +78,6 @@ exports.handler = async (event, context, callback) => {
 
     	// read gif from disk
     	const gitFile = readFileSync(`/tmp/${dstKey}`);
-
-        //exec("echo `ls -l -R /tmp`",
-        //  function (error, stdout, stderr) {
-        //      console.log("stdout: " + stdout) 
-        //});
 
     	// delete the temp files
     	unlinkSync(`/tmp/${dstKey}`);
@@ -105,7 +99,3 @@ exports.handler = async (event, context, callback) => {
     console.log('Successfully gif ' + srcBucket + '/' + srcKey +
         ' and uploaded to ' + gifBucket + '/' + dstKey); 
 };
-
-
-// aws s3 ls s3://source18-resized
-// aws s3 cp s3://source18-resized/prueba.gif ./

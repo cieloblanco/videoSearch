@@ -11,6 +11,10 @@ const ffmpegPath = '/opt/ffmpeg-static/ffmpeg';
 const allowedTypes = ['mov', 'mpg', 'mpeg', 'mp4', 'wmv', 'avi', 'webm']
 const width = 480
 const height = -1
+var interval = 28 //seconds
+var minutes = 0;
+var seconds = 0;
+var id = 1;
 
 module.exports.handler = async (event, context) => {
 
@@ -18,7 +22,7 @@ module.exports.handler = async (event, context) => {
   const bucket = event.Records[0].s3.bucket.name;
   const thumbnailBucket = bucket + "-thumbnail";
 
-  const target = s3.getSignedUrl('getObject', { Bucket: bucket, Key: srcKey, Expires: 1000 })
+  const video = s3.getSignedUrl('getObject', { Bucket: bucket, Key: srcKey, Expires: 1000 })
   let fileType = srcKey.match(/\.\w+$/)
 
   if (!fileType) {
@@ -40,10 +44,18 @@ module.exports.handler = async (event, context) => {
 
   function createThumbnail(seek) {
     return new Promise((resolve, reject) => {
+
+      seconds = seek;
+      minutes = Math.trunc(seek/60);
+
+      if (seek>=60) {
+        seconds = seek%60;
+      }
+
       let tmpFile = createWriteStream('/tmp/thumbnail.jpg')
       const ffmpeg = spawn(ffmpegPath, [
         '-ss', seek,
-        '-i', target, 
+        '-i', video, 
         '-vf', `thumbnail,scale=${width}:${height}`,  
         '-qscale:v', '2',
         '-frames:v', '1',
@@ -71,12 +83,7 @@ module.exports.handler = async (event, context) => {
     return new Promise((resolve, reject) => {
       let tmpFile = createReadStream('/tmp/thumbnail.jpg')
 
-      exec("echo `ls -l -R /tmp`",
-      function (error, stdout, stderr) {
-        console.log("stdout: " + stdout) 
-      });
-
-      let dstKey = `${x}.jpg`;
+      let dstKey = `${x}_${minutes}_${seconds}.jpg`;
 
       var params = {
         Bucket: thumbnailBucket,
@@ -103,17 +110,18 @@ module.exports.handler = async (event, context) => {
     'format=duration',
     '-of',
     'default=nw=1:nk=1',
-    target
+    video
   ])
 
   const duration = Math.ceil(ffprobe.stdout.toString())
 
-  await createThumbnail(2)
-  await uploadThumbnail(1)
-  await createThumbnail(10)
-  await uploadThumbnail(2)
-  await createThumbnail(20)
-  await uploadThumbnail(3)
+  for(var s = interval; s < duration; s+=interval) {
 
-  return console.log(`processed successfully`)
+    await createThumbnail(s)
+    await uploadThumbnail(id)
+
+    id++;
+
+  }
+
 }
