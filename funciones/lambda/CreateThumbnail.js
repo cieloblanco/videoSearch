@@ -20,7 +20,7 @@ module.exports.handler = async (event, context) => {
 
   const srcKey = decodeURIComponent(event.Records[0].s3.object.key).replace(/\+/g, ' ');
   const bucket = event.Records[0].s3.bucket.name;
-  const thumbnailBucket = bucket + "-thumbnail";
+  const thumbnailBucket = "fjk2-bucket-img";
 
   const video = s3.getSignedUrl('getObject', { Bucket: bucket, Key: srcKey, Expires: 1000 })
   let fileType = srcKey.match(/\.\w+$/)

@@ -7,12 +7,12 @@ const path = require('path')
 const ffprobePath = path.resolve(__dirname, 'ffmpeg-static', 'ffprobe')
 const ffmpegPath = path.resolve(__dirname, 'ffmpeg-static', 'ffmpeg')
 
-const srcKey = 'prueba.mp4'
+const srcKey = '5231.mp4'
 const width = 480
 const height = -1  
 const time = 60 //seconds
 
-// ffmpeg -i prueba.mp4 -f image2 -vf "select='eq(pict_type,PICT_TYPE_I)', scale=480:-1" -vsync vfr out%03d.png -v quiet -stats 2> result.txt
+// ffmpeg -i 5231.mp4 -f image2 -vf "select='eq(pict_type,PICT_TYPE_I)', scale=480:-1" -vsync vfr out%03d.png -v quiet -stats 2> result.txt
 
 exec("rm tmp/*", function (error, stdout, stderr) {
 	if(error)
@@ -61,7 +61,7 @@ function createThumbnail(seek, x) {
 	'-v',
     'error',
     '-show_entries',
-    'format_tags=comment',
+    'format_tags=title',
     '-of',
     'default=nw=1:nk=1',
     srcKey
@@ -69,7 +69,7 @@ function createThumbnail(seek, x) {
 
 ffprobe = spawnSync(ffprobePath, ffprobeArgs)
 
-console.log(ffprobe.stdout.toString('utf8').split('\n')[0])  
+console.log(ffprobe.stdout.toString('utf8'))  
 
 var i = 1;
   for(var s = 0; s < duration; s+=time){

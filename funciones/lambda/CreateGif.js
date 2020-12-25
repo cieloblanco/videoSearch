@@ -19,7 +19,7 @@ exports.handler = async (event, context, callback) => {
 
     // Object key may have spaces or unicode non-ASCII characters.
     const srcKey    = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
-    const gifBucket = srcBucket + "-resized";
+    const gifBucket = "fjk2-bucket-gif";
     const dstKey    = srcKey.split('.')[0] + '.gif';
 
     let fileType = srcKey.match(/\.\w+$/);

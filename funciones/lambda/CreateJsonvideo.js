@@ -5,6 +5,7 @@ const { spawnSync } = require('child_process');
 
 const ffprobePath = "/opt/ffmpeg-static/ffprobe";
 const allowedTypes = ["mov", "mpg", "mpeg", "mp4", "wmv", "avi", "webm"];
+const interval = 14 //seconds
 
 // get reference to S3 client
 const s3 = new AWS.S3();
@@ -16,8 +17,8 @@ module.exports.handler = async (event, context) => {
         /\+/g,
         " "
     );    
-    const video = s3.getSignedUrl('getObject', { Bucket: srcBucket, Key: srcKey, Expires: 1000 })        
-    const infoBucket = srcBucket + "-resized";
+    const input = s3.getSignedUrl('getObject', { Bucket: srcBucket, Key: srcKey, Expires: 1000 })        
+    const infoBucket = "fjk2-bucket-jsonvideo";
     const id = srcKey.split('.')[0];
 
     let fileType = srcKey.match(/\.\w+$/);
@@ -40,42 +41,38 @@ module.exports.handler = async (event, context) => {
             "format=duration",
             "-of",
             "default=nw=1:nk=1",
-            '-sexagesimal',
-            video
+            input
           ]);
 
-        const duration = ffprobe.stdout.toString().split(':')
-        const minutes = Math.round(duration[1]);
-        const seconds = Math.round(duration[2]);
+        const result = ffprobe.stdout.toString()
+        const duration = Math.ceil(result)
 
-        const ffprobeArgs = [
-            "-v",
-            "error",
-            "-show_entries",
-            "format_tags=comment",
-            "-of",
-            "default=nw=1:nk=1",
-            video
-        ];
+        const information = {} 
+        const video = 'video';
+        const frames = 'frames';
+        information[video] = `${id}`; 
+        information[frames] = []
 
-        ffprobe = spawnSync(ffprobePath, ffprobeArgs);
+        var frame = 0;
+        var minutes = 0;
+        var seconds = 0;
 
-        const title = ffprobe.stdout.toString("utf8").split("\n")[0];
+        for(var s = interval; s < duration; s+=interval) {
 
-        const dateObj = new Date();
-        const month = dateObj.getUTCMonth() + 1; 
-        const day = dateObj.getUTCDate();
-        const year = dateObj.getUTCFullYear();
+            seconds = s;
+            minutes = Math.trunc(s/60);
 
-        const date = day + "/" + month + "/" + year;
-        const hour = new Date().toISOString().split('T')[1].split('.')[0];
+            if (s>=60) {
+                seconds = s%60;
+            }
 
-        const information = {
-            video: `${id}`,
-            titulo: `${title}`,
-            fecha: `${date} ${hour}`,
-            duracion: `${minutes}:${seconds}`
-        };
+            frame = {
+                minuto: `${minutes}`,
+                segundo: `${seconds}`,
+            }; 
+
+            information[frames].push(frame);
+        }
 
         var json = Buffer.from(JSON.stringify(information, null, 4));
             
