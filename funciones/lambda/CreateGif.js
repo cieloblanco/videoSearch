@@ -13,12 +13,23 @@ const height = -1
 // get reference to S3 client
 const s3 = new AWS.S3();
 
-exports.handler = async (event, context, callback) => {
+function getSNSMessageObject(msgString) {
+    var x = msgString.replace(/\\/g,'');
+    var y = x.substring(1,x.length-1);
+    var z = JSON.parse(y);
+   
+    return z;
+}
 
-    const srcBucket = event.Records[0].s3.bucket.name;
+module.exports.handler = async (event, context) => {
+
+    var snsMsgString = JSON.stringify(event.Records[0].Sns.Message);
+    var snsMsgObject = getSNSMessageObject(snsMsgString);
 
     // Object key may have spaces or unicode non-ASCII characters.
-    const srcKey    = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
+    const srcKey = decodeURIComponent(snsMsgObject.Records[0].s3.object.key).replace(/\+/g, ' ');
+    const srcBucket = snsMsgObject.Records[0].s3.bucket.name;
+
     const gifBucket = "fjk2-bucket-gif";
     const dstKey    = srcKey.split('.')[0] + '.gif';
 
@@ -46,27 +57,27 @@ exports.handler = async (event, context, callback) => {
 
     try { 
     
-	    const params = {
-	            Bucket: srcBucket,
-	            Key: srcKey
-	        };
-	    // get the video    
-	    const video = await s3.getObject(params).promise();
+        const params = {
+                Bucket: srcBucket,
+                Key: srcKey
+            };
+        // get the video    
+        const video = await s3.getObject(params).promise();
 
-    	// write the file to disk
-    	writeFileSync(`/tmp/${srcKey}`, video.Body);
+        // write the file to disk
+        writeFileSync(`/tmp/${srcKey}`, video.Body);
         
         // get gif from video
         const ffmpegArgs = [
-        '-ss', '61.0',
+        '-ss', '0',
         '-t', '5',
-		'-i', `/tmp/${srcKey}`,
-		'-f', 'gif',
-	    '-filter_complex', `[0:v] fps=12,scale=w=${width}:h=${height},split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1`,
-	    `/tmp/${dstKey}`
-	  	];
+        '-i', `/tmp/${srcKey}`,
+        '-f', 'gif',
+        '-filter_complex', `[0:v] fps=12,scale=w=${width}:h=${height},split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1`,
+        `/tmp/${dstKey}`
+        ];
 
-		const ffmpeg = spawnSync(ffmpegPath, ffmpegArgs, { stdio: "inherit" });
+        const ffmpeg = spawnSync(ffmpegPath, ffmpegArgs, { stdio: "inherit" });
             
     } catch (error) {
         console.log(error);
@@ -76,13 +87,13 @@ exports.handler = async (event, context, callback) => {
     // Upload the gif to the destination bucket
     try {
 
-    	// read gif from disk
-    	const gitFile = readFileSync(`/tmp/${dstKey}`);
+        // read gif from disk
+        const gitFile = readFileSync(`/tmp/${dstKey}`);
 
-    	// delete the temp files
-    	unlinkSync(`/tmp/${dstKey}`);
-    	unlinkSync(`/tmp/${srcKey}`);
-    	
+        // delete the temp files
+        unlinkSync(`/tmp/${dstKey}`);
+        unlinkSync(`/tmp/${srcKey}`);
+        
         const destparams = {
             Bucket: gifBucket,
             Key: dstKey,

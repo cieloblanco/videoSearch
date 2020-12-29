@@ -11,15 +11,28 @@ const ffmpegPath = '/opt/ffmpeg-static/ffmpeg';
 const allowedTypes = ['mov', 'mpg', 'mpeg', 'mp4', 'wmv', 'avi', 'webm']
 const width = 480
 const height = -1
-var interval = 28 //seconds
+var interval = 2 //seconds
 var minutes = 0;
 var seconds = 0;
-var id = 1;
+var id = Number(process.env.id_key);
+
+function getSNSMessageObject(msgString) {
+   var x = msgString.replace(/\\/g,'');
+   var y = x.substring(1,x.length-1);
+   var z = JSON.parse(y);
+   
+   return z;
+}
 
 module.exports.handler = async (event, context) => {
 
-  const srcKey = decodeURIComponent(event.Records[0].s3.object.key).replace(/\+/g, ' ');
-  const bucket = event.Records[0].s3.bucket.name;
+  var snsMsgString = JSON.stringify(event.Records[0].Sns.Message);
+  var snsMsgObject = getSNSMessageObject(snsMsgString);
+
+  const srcKey = decodeURIComponent(snsMsgObject.Records[0].s3.object.key).replace(/\+/g, ' ');
+  const bucket = snsMsgObject.Records[0].s3.bucket.name;
+  const id_img    = srcKey.split('.')[0];
+  
   const thumbnailBucket = "fjk2-bucket-img";
 
   const video = s3.getSignedUrl('getObject', { Bucket: bucket, Key: srcKey, Expires: 1000 })
@@ -83,12 +96,13 @@ module.exports.handler = async (event, context) => {
     return new Promise((resolve, reject) => {
       let tmpFile = createReadStream('/tmp/thumbnail.jpg')
 
-      let dstKey = `${x}_${minutes}_${seconds}.jpg`;
+      let dstKey = `${id_img}_${minutes}_${seconds}.jpg`;
 
       var params = {
         Bucket: thumbnailBucket,
         Key: dstKey,
         Body: tmpFile,
+        ContentEncoding: 'base64',
         ContentType: `image/jpg`
       }
 
@@ -123,5 +137,7 @@ module.exports.handler = async (event, context) => {
     id++;
 
   }
+  
+  process.env.id_key = id.toString();
 
 }

@@ -5,18 +5,28 @@ const { spawnSync } = require('child_process');
 
 const ffprobePath = "/opt/ffmpeg-static/ffprobe";
 const allowedTypes = ["mov", "mpg", "mpeg", "mp4", "wmv", "avi", "webm"];
-const interval = 14 //seconds
+const interval = 2 //seconds
 
 // get reference to S3 client
 const s3 = new AWS.S3();
 
+
+function getSNSMessageObject(msgString) {
+    var x = msgString.replace(/\\/g,'');
+    var y = x.substring(1,x.length-1);
+    var z = JSON.parse(y);
+   
+    return z;
+}
+
 module.exports.handler = async (event, context) => {
 
-    const srcBucket = event.Records[0].s3.bucket.name;
-    const srcKey = decodeURIComponent(event.Records[0].s3.object.key).replace(
-        /\+/g,
-        " "
-    );    
+    var snsMsgString = JSON.stringify(event.Records[0].Sns.Message);
+    var snsMsgObject = getSNSMessageObject(snsMsgString);
+
+    const srcKey = decodeURIComponent(snsMsgObject.Records[0].s3.object.key).replace(/\+/g, ' ');
+    const srcBucket = snsMsgObject.Records[0].s3.bucket.name;
+
     const input = s3.getSignedUrl('getObject', { Bucket: srcBucket, Key: srcKey, Expires: 1000 })        
     const infoBucket = "fjk2-bucket-jsonvideo";
     const id = srcKey.split('.')[0];
@@ -50,7 +60,7 @@ module.exports.handler = async (event, context) => {
         const information = {} 
         const video = 'video';
         const frames = 'frames';
-        information[video] = `${id}`; 
+        information[video] = Number(`${id}`); 
         information[frames] = []
 
         var frame = 0;
@@ -67,8 +77,8 @@ module.exports.handler = async (event, context) => {
             }
 
             frame = {
-                minuto: `${minutes}`,
-                segundo: `${seconds}`,
+                minuto: Number(`${minutes}`),
+                segundo:  Number(`${seconds}`),
             }; 
 
             information[frames].push(frame);
