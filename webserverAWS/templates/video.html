@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>videos</title>
+</head>
+<script>
+var timestamp = 0;
+</script>
+<body>
+    <div class="container">
+
+    <div class="heading">
+    <form action="inicio" method="POST" class="forminicio">
+    <button class="inicio"> </button>
+    </form>
+    <div class="barra">
+    <form action="resultados" method="POST" class="formindex">
+    <div class="input">
+    <input type="text" class="intext" id="inputText" name="textin" >
+    </div>
+
+    <div class="buscar">
+    <button type="submit" class="btnbuscar"></button>
+    </div>
+    </form>
+    <form action="upload" method=POST class="subir" enctype=multipart/form-data>
+    <button name="myfile" type="button" class="btnsubir"><input type="file" name='myfile' class="infile" ></button>
+    <button type="submit" class="btncargar"></button>
+    </form>
+    </div>
+    </div>
+
+    <div class="video-container">
+
+    {%for l in list%}
+    <div class="video">
+    <video src="https://fjk2-bucket-video.s3.amazonaws.com/{{l["valorVideo"].split(",")[1].lstrip('+-0')}}.mp4" controls poster="https://fjk2-bucket-img.s3.amazonaws.com/{{l["valorVideo"].split(",")[1].lstrip('+-0')}}_0_10.jpg" onmouseover="FuncionGif(this);" onmouseout="FuncionImg(this);" data-srcimg="https://fjk2-bucket-img.s3.amazonaws.com/{{l["valorVideo"].split(",")[1].lstrip('+-0')}}_0_10.jpg" data-srcgif="https://fjk2-bucket-gif.s3.amazonaws.com/{{l["valorVideo"].split(",")[1].lstrip('+-0')}}.gif"></video>
+    <div class="times">
+    Name:{{l["valorVideo"].split(",")[1].lstrip('+-0')}} Rating:{{l["valorVideo"].split(",")[0].lstrip('+-0')}} </br>
+    <form>
+    {%for t in l["tiempos"]%}
+    <a class="timeslink" onclick="return Funcion(this);" >{{t["segundo"]}}</a>
+    {%endfor%}
+    </form>
+    </div>
+    </div>
+    {%endfor%}
+
+    </div>
+</div>
+<script>
+    var video = document.querySelectorAll('video');
+    video.forEach(play => play.addEventListener('click',() =>{
+    video.controls;
+    play.classList.toggle('active');
+    if(play.paused){
+    play.currentTime=timestamp;
+    autoplay();
+    }else{
+    autopause();
+    }
+    }));
+
+    function Funcion(e){
+    var links = document.querySelectorAll('a'),i;
+    for (i = 0; i < links.length; ++i) {
+    links[i].style.color = "white";
+    }
+    e.style.color = "greenyellow";
+    timestamp = e.text;
+    };
+    function FuncionGif(x){
+    x.setAttribute("poster",x.dataset.srcgif);
+    };
+
+    function FuncionImg(x){
+    x.setAttribute("poster",x.dataset.srcimg);
+    };
+</script>
+</body>
+</html>
